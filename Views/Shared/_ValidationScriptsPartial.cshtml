@@ -1,2 +1,11 @@
 ﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+
+<!--
+    Este archivo parcial de vista (_ValidationScriptsPartial.cshtml) se utiliza para incluir
+    los scripts de validación de jQuery en las vistas que los necesiten, para esto
+    se basa en los data annotations del modelo ej: [Required], [StringLength], [EmailAddress], etc.
+    Se puede renderizar en una vista utilizando la directiva:
+    ARROBAawait Html.PartialAsync("_ValidationScriptsPartial")
+    Esto es útil para habilitar la validación del lado del cliente en formularios.
+-->

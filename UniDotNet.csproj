@@ -1,9 +1,17 @@
+<!-- Define que el proyecto usa el SDK de .NET para aplicaciones web
+este es ideal para aplicaciones MVC de ASP.NET Core -->
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <!-- version .NET 9.0 del SDK de ASP.NET Core -->
     <Nullable>enable</Nullable>
+    <!-- Obliga al programador especificar cuando 
+    un valor puede ser nulo ej: "string?" -->
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Habilita la importación automática de namespaces 
+    comunes globalmente en el proyecto 
+    (using System; using System.Linq etc.)-->
   </PropertyGroup>
 
 </Project>

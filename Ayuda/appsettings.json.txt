@@ -1,0 +1,17 @@
+No se pueden agregar comentarios a un documento json
+
+El archivo appsettings.json almacena la configuración de la aplicación en formato JSON, 
+como cadenas de conexión, claves de API y ajustes personalizados.
+Centraliza valores como cadenas de conexión, niveles de log, parámetros personalizados, y más. 
+Se carga automáticamente al iniciar la app, y permite modificar comportamientos sin recompilar el código.
+
+
+{
+  "Logging": {                              //Configuraciones de log.
+    "LogLevel": {
+      "Default": "Information",             // Nivel de log general: muestra eventos y superiores (warning, error, critical)
+      "Microsoft.AspNetCore": "Warning"     // Nivel específico para ASP.NET Core: solo advertencias y errores
+    }
+  },
+  "AllowedHosts": "*" //Para establecer lista blanca de hosts  (se cambia en version retail)
+}
