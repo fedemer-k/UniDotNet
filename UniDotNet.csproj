@@ -14,4 +14,8 @@ este es ideal para aplicaciones MVC de ASP.NET Core -->
     (using System; using System.Linq etc.)-->
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="9.4.0" />
+  </ItemGroup>
+
 </Project>

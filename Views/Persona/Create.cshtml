@@ -1,0 +1,119 @@
+@{
+    ViewData["Title"] = "Información sobre Alta de Personas";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+             
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">Alta de Personas</h2>
+                    <p class="text-muted mb-0">Información sobre el proceso de registro</p>
+                </div>
+                <div>
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Volver al listado
+                    </a>
+                </div>
+            </div>
+
+             Información principal 
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>¿Por qué no puedo crear personas directamente?
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info" role="alert">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-lightbulb me-2"></i>Diseño del Sistema
+                        </h6>
+                        <p class="mb-0">@ViewBag.Message</p>
+                    </div>
+
+                    <h6 class="mt-4 mb-3">
+                        <i class="fas fa-route me-2"></i>¿Cómo crear una nueva persona?
+                    </h6>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card border-success">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-home fa-2x text-success mb-3"></i>
+                                    <h6 class="card-title">Como Propietario</h6>
+                                    <p class="card-text small">Registra una persona que posee inmuebles</p>
+                                    <a href="@Url.Action("Create", "Propietario")" class="btn btn-success btn-sm">
+                                        <i class="fas fa-plus me-1"></i>Crear Propietario
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-info">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-key fa-2x text-info mb-3"></i>
+                                    <h6 class="card-title">Como Inquilino</h6>
+                                    <p class="card-text small">Registra una persona que alquila inmuebles</p>
+                                    <a href="@Url.Action("Create", "Inquilino")" class="btn btn-info btn-sm">
+                                        <i class="fas fa-plus me-1"></i>Crear Inquilino
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-warning">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-user-tie fa-2x text-warning mb-3"></i>
+                                    <h6 class="card-title">Como Empleado</h6>
+                                    <p class="card-text small">Registra una persona que trabaja en la inmobiliaria</p>
+                                    <a href="@Url.Action("Create", "Empleado")" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-plus me-1"></i>Crear Empleado
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             Ventajas del diseño 
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-check-circle me-2"></i>Ventajas de este diseño
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-shield-alt text-success me-2"></i>
+                                    <strong>Consistencia de datos:</strong> Cada persona tiene al menos un rol
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-users text-info me-2"></i>
+                                    <strong>Roles múltiples:</strong> Una persona puede ser propietario e inquilino
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-database text-warning me-2"></i>
+                                    <strong>Integridad referencial:</strong> No hay personas "huérfanas"
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-cogs text-primary me-2"></i>
+                                    <strong>Gestión simplificada:</strong> Cada módulo maneja su lógica específica
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

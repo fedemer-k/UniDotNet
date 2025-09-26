@@ -1,0 +1,145 @@
+@model UniDotNet.Models.PersonaModel
+@{
+    ViewData["Title"] = "Crear Propietario";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-plus me-2"></i>Crear Nueva Persona como Propietario
+                    </h3>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Volver al Listado
+                    </a>
+                </div>
+                
+                <div class="card-body">
+                     Mensajes de estado 
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header bg-success text-white">
+                                        <h5 class="mb-0">
+                                            <i class="fas fa-user-plus me-2"></i>Datos de la Persona
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label asp-for="Nombre" class="form-label">
+                                                        Nombre <span class="text-danger">*</span>
+                                                    </label>
+                                                    <input asp-for="Nombre" class="form-control" required />
+                                                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label asp-for="Apellido" class="form-label">
+                                                        Apellido <span class="text-danger">*</span>
+                                                    </label>
+                                                    <input asp-for="Apellido" class="form-control" required />
+                                                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label asp-for="Dni" class="form-label">
+                                                        DNI <span class="text-danger">*</span>
+                                                    </label>
+                                                    <input asp-for="Dni" class="form-control" required />
+                                                    <span asp-validation-for="Dni" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label asp-for="Telefono" class="form-label">
+                                                        Teléfono <span class="text-danger">*</span>
+                                                    </label>
+                                                    <input asp-for="Telefono" class="form-control" required />
+                                                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label asp-for="Email" class="form-label">
+                                                        Email <span class="text-danger">*</span>
+                                                    </label>
+                                                    <input asp-for="Email" type="email" class="form-control" required />
+                                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                 Panel de información 
+                                <div class="card">
+                                    <div class="card-header bg-info text-white">
+                                        <h5 class="mb-0">
+                                            <i class="fas fa-info-circle me-2"></i>Información
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-success">
+                                            <small>
+                                                <strong>Rol asignado:</strong> Al crear esta persona, automáticamente se le asignará el rol de <strong>Propietario</strong>.
+                                            </small>
+                                        </div>
+                                        <div class="alert alert-info">
+                                            <small>
+                                                <strong>Nota:</strong> Podrá asignar roles adicionales desde la gestión de personas después de la creación.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                 Acciones 
+                                <div class="card mt-3">
+                                    <div class="card-header bg-success text-white">
+                                        <h5 class="mb-0">
+                                            <i class="fas fa-save me-2"></i>Acciones
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fas fa-save me-2"></i>Crear Propietario
+                                            </button>
+                                            <a href="@Url.Action("Index")" class="btn btn-secondary">
+                                                <i class="fas fa-times me-2"></i>Cancelar
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

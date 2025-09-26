@@ -1,3 +1,5 @@
+using UniDotNet.Repository;
+
 // Se crea el builder, es el inicializador y configurador 
 //del host de la aplicacion web ASP.NET Core
 // cargando las configuraciones desde appsettings.json y variables de entorno
@@ -7,6 +9,23 @@ var builder = WebApplication.CreateBuilder(args);
 //Registra los servicios necesarios para usar el patrón MVC, 
 //incluyendo soporte para controladores y vistas Razor.
 builder.Services.AddControllersWithViews();
+
+// Configuración de inyección de dependencias para los repositorios
+builder.Services.AddScoped<IPersonaRepositorio, PersonaRepositorio>();
+builder.Services.AddScoped<IPropietarioRepositorio, PropietarioRepositorio>();
+builder.Services.AddScoped<IInquilinoRepositorio, InquilinoRepositorio>();
+builder.Services.AddScoped<IEmpleadoRepositorio, EmpleadoRepositorio>();
+
+// Configuración de sesiones para soporte de TempData en controladores
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// Configuración de caché en memoria para mejor rendimiento
+builder.Services.AddMemoryCache();
 
 //Se crea la instancia de la aplicación web (WebApplication).
 //Ya esta lista para configurar el pipeline de solicitudes HTTP
@@ -53,10 +72,12 @@ app.UseRouting();
 //y en el nombre de la acción (método) para mapear las URLs entrantes
 //a los controladores y acciones correspondientes.
 
+// Middleware de sesiones debe ir antes de la autorización
+app.UseSession();
+
 app.UseAuthorization();
 // Esto se usa en autenticacion, para establecer políticas de autorización
 // y controlar el acceso a recursos protegidos en la aplicación web.
-
 
 //app.MapStaticAssets();
 // ni idea que hace esto, lo dejo comentado por las dudas

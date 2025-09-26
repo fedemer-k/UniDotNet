@@ -1,0 +1,159 @@
+@model UniDotNet.Models.PersonaModel
+
+@{
+    ViewData["Title"] = "Modificar Persona";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+             
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">Modificar Persona</h2>
+                    <p class="text-muted mb-0">Actualiza los datos personales</p>
+                </div>
+                <div>
+                    <a href="@Url.Action("Details", new { id = Model.PersonaId })" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Volver a detalles
+                    </a>
+                </div>
+            </div>
+
+              
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Warning"] != null)
+            {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Warning"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+             Formulario 
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-edit me-2"></i>Datos Personales
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.PersonaId)
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Dni" class="form-label">
+                                        <i class="fas fa-id-card me-1"></i>DNI *
+                                    </label>
+                                    <input asp-for="Dni" class="form-control" placeholder="Ej: 12345678">
+                                    <span asp-validation-for="Dni" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label">
+                                        <i class="fas fa-envelope me-1"></i>Email *
+                                    </label>
+                                    <input asp-for="Email" class="form-control" placeholder="ejemplo@correo.com">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Nombre" class="form-label">
+                                        <i class="fas fa-user me-1"></i>Nombre *
+                                    </label>
+                                    <input asp-for="Nombre" class="form-control" placeholder="Nombre">
+                                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Apellido" class="form-label">
+                                        <i class="fas fa-user me-1"></i>Apellido *
+                                    </label>
+                                    <input asp-for="Apellido" class="form-control" placeholder="Apellido">
+                                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Telefono" class="form-label">
+                                        <i class="fas fa-phone me-1"></i>Teléfono
+                                    </label>
+                                    <input asp-for="Telefono" class="form-control" placeholder="Ej: +54 11 1234-5678">
+                                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                                    <div class="form-text">Opcional. Formato: +54 11 1234-5678</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Los campos marcados con * son obligatorios
+                                </small>
+                            </div>
+                            <div>
+                                <a href="@Url.Action("Details", new { id = Model.PersonaId })" class="btn btn-secondary me-2">
+                                    <i class="fas fa-times me-1"></i>Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+             Información adicional 
+            <div class="card mt-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">
+                                <i class="fas fa-shield-alt me-1"></i>Validaciones
+                            </h6>
+                            <ul class="small text-muted">
+                                <li>El DNI debe ser único en el sistema</li>
+                                <li>El email debe ser único y válido</li>
+                                <li>El teléfono debe seguir el formato argentino</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">
+                                <i class="fas fa-user-tag me-1"></i>Roles
+                            </h6>
+                            <p class="small text-muted">
+                                Los roles de esta persona se gestionan desde los módulos específicos de Propietarios, Inquilinos y Empleados.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

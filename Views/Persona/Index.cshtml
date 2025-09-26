@@ -1,0 +1,341 @@
+@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Gestión de Personas";
+    var currentPage = ViewBag.CurrentPage ?? 1;
+    var totalPages = ViewBag.TotalPaginas ?? 1;
+    var search = ViewBag.Search ?? "";
+    var hasPrevious = ViewBag.HasPrevious ?? false;
+    var hasNext = ViewBag.HasNext ?? false;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">Gestión de Personas</h2>
+                    <p class="text-muted mb-0">Administra personas y sus roles en el sistema</p>
+                </div>
+                <div>
+                     
+                    <a href="@Url.Action("Recuperar")" class="btn btn-outline-success me-2">
+                        <i class="fas fa-undo me-2"></i>Recuperar Persona
+                    </a>
+                    <a href="@Url.Action("Create")" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Nueva Persona
+                    </a>
+                </div>
+            </div>
+
+             
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Warning"] != null)
+            {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Warning"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+             Filtros y búsqueda 
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="get" action="@Url.Action("Index")">
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           name="search" 
+                                           value="@search" 
+                                           placeholder="Buscar por nombre, apellido, DNI o email...">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-outline-primary flex-fill">
+                                        <i class="fas fa-search me-1"></i>Buscar
+                                    </button>
+                                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+             Tabla de personas 
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-users me-2"></i>
+                        Lista de Personas (@ViewBag.TotalRegistros registros)
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>DNI</th>
+                                        <th>Nombre Completo</th>
+                                        <th>Teléfono</th>
+                                        <th>Email</th>
+                                        <th>Roles</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var persona in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <span class="badge bg-light text-dark">@persona.Dni</span>
+                                            </td>
+                                            <td>
+                                                <strong>@persona.NombreCompleto</strong>
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(persona.Telefono))
+                                                {
+                                                    <i class="fas fa-phone me-1 text-muted"></i>@persona.Telefono
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Sin teléfono</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(persona.Email))
+                                                {
+                                                    <i class="fas fa-envelope me-1 text-muted"></i>@persona.Email
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Sin email</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @{
+                                                    string rolesString = persona.Roles?.ToString() ?? "";
+                                                    var rolesParts = rolesString.Split(',');
+                                                    var roles = new List<string>();
+                                                    foreach(var part in rolesParts)
+                                                    {
+                                                        roles.Add(part.Trim());
+                                                    }
+                                                    var esPropietario = roles.Contains("Propietario");
+                                                    var esInquilino = roles.Contains("Inquilino");
+                                                    var esEmpleado = roles.Contains("Empleado");
+                                                }
+                                                
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    @* Span Propietario clickeable *@
+                                                    @if (esPropietario)
+                                                    {
+                                                        <form method="post" action="@Url.Action("BajaPropietario")" style="display: inline;">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="personaId" value="@persona.PersonaId" />
+                                                            <span class="badge bg-success clickeable-role" 
+                                                                  style="cursor: pointer;" 
+                                                                  title="Click para dar de baja como Propietario"
+                                                                  onclick="this.closest('form').submit();">
+                                                                <i class="fas fa-home me-1"></i>Propietario
+                                                            </span>
+                                                        </form>
+                                                    }
+                                                    else
+                                                    {
+                                                        <form method="post" action="@Url.Action("AltaPropietario")" style="display: inline;">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="personaId" value="@persona.PersonaId" />
+                                                            <span class="badge bg-secondary clickeable-role" 
+                                                                  style="cursor: pointer; opacity: 0.6;" 
+                                                                  title="Click para dar de alta como Propietario"
+                                                                  onclick="this.closest('form').submit();">
+                                                                <i class="fas fa-home me-1"></i>Propietario
+                                                            </span>
+                                                        </form>
+                                                    }
+
+                                                    @* Span Inquilino clickeable *@
+                                                    @if (esInquilino)
+                                                    {
+                                                        <form method="post" action="@Url.Action("BajaInquilino")" style="display: inline;">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="personaId" value="@persona.PersonaId" />
+                                                            <span class="badge bg-info clickeable-role" 
+                                                                  style="cursor: pointer;" 
+                                                                  title="Click para dar de baja como Inquilino"
+                                                                  onclick="this.closest('form').submit();">
+                                                                <i class="fas fa-user me-1"></i>Inquilino
+                                                            </span>
+                                                        </form>
+                                                    }
+                                                    else
+                                                    {
+                                                        <form method="post" action="@Url.Action("AltaInquilino")" style="display: inline;">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="personaId" value="@persona.PersonaId" />
+                                                            <span class="badge bg-secondary clickeable-role" 
+                                                                  style="cursor: pointer; opacity: 0.6;" 
+                                                                  title="Click para dar de alta como Inquilino"
+                                                                  onclick="this.closest('form').submit();">
+                                                                <i class="fas fa-user me-1"></i>Inquilino
+                                                            </span>
+                                                        </form>
+                                                    }
+
+                                                    @* Span Empleado clickeable *@
+                                                    @if (esEmpleado)
+                                                    {
+                                                        <form method="post" action="@Url.Action("BajaEmpleado")" style="display: inline;">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="personaId" value="@persona.PersonaId" />
+                                                            <span class="badge bg-warning text-dark clickeable-role" 
+                                                                  style="cursor: pointer;" 
+                                                                  title="Click para dar de baja como Empleado"
+                                                                  onclick="this.closest('form').submit();">
+                                                                <i class="fas fa-briefcase me-1"></i>Empleado
+                                                            </span>
+                                                        </form>
+                                                    }
+                                                    else
+                                                    {
+                                                        <form method="post" action="@Url.Action("AltaEmpleado")" style="display: inline;">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="personaId" value="@persona.PersonaId" />
+                                                            <span class="badge bg-secondary clickeable-role" 
+                                                                  style="cursor: pointer; opacity: 0.6;" 
+                                                                  title="Click para dar de alta como Empleado"
+                                                                  onclick="this.closest('form').submit();">
+                                                                <i class="fas fa-briefcase me-1"></i>Empleado
+                                                            </span>
+                                                        </form>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="btn-group" role="group">
+                                                     @* Adding descriptive text to action buttons *@
+                                                    <a href="@Url.Action("Details", new { id = persona.PersonaId })" 
+                                                       class="btn btn-outline-info btn-sm" 
+                                                       title="Ver detalles">
+                                                        <i class="fas fa-eye me-1"></i>Ver
+                                                    </a>
+                                                    <a href="@Url.Action("Edit", new { id = persona.PersonaId })" 
+                                                       class="btn btn-outline-primary btn-sm" 
+                                                       title="Modificar">
+                                                        <i class="fas fa-edit me-1"></i>Editar
+                                                    </a>
+                                                    <a href="@Url.Action("Delete", new { id = persona.PersonaId })" 
+                                                       class="btn btn-outline-danger btn-sm" 
+                                                       title="Dar de baja">
+                                                        <i class="fas fa-trash me-1"></i>Eliminar
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No se encontraron personas</h5>
+                            <p class="text-muted">
+                                @if (!string.IsNullOrEmpty(search))
+                                {
+                                    <span>No hay resultados para "<strong>@search</strong>"</span>
+                                }
+                                else
+                                {
+                                    <span>Aún no hay personas registradas en el sistema</span>
+                                }
+                            </p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+             Paginación 
+            @if (totalPages > 1)
+            {
+                <nav aria-label="Paginación de personas" class="mt-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-muted">
+                            Página @currentPage de @totalPages (@ViewBag.TotalRegistros registros total)
+                        </div>
+                        <ul class="pagination mb-0">
+                            @if (hasPrevious)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Index", new { page = currentPage - 1, search = search })">
+                                        <i class="fas fa-chevron-left"></i> Anterior
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">
+                                        <i class="fas fa-chevron-left"></i> Anterior
+                                    </span>
+                                </li>
+                            }
+
+                            @for (int i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPages, currentPage + 2); i++)
+                            {
+                                <li class="page-item @(i == currentPage ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", new { page = i, search = search })">@i</a>
+                                </li>
+                            }
+
+                            @if (hasNext)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Index", new { page = currentPage + 1, search = search })">
+                                        Siguiente <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">
+                                        Siguiente <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </nav>
+            }
+        </div>
+    </div>
+</div>

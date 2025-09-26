@@ -1,0 +1,183 @@
+@model dynamic
+
+@{
+    ViewData["Title"] = "Confirmar Baja de Persona";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+             
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1 text-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Baja
+                    </h2>
+                    <p class="text-muted mb-0">Esta acción dará de baja la persona y todos sus roles</p>
+                </div>
+                <div>
+                    <a href="@Url.Action("Details", new { id = Model.PersonaId })" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Volver a detalles
+                    </a>
+                </div>
+            </div>
+
+             Advertencia principal 
+            <div class="alert alert-danger" role="alert">
+                <h5 class="alert-heading">
+                    <i class="fas fa-exclamation-triangle me-2"></i>¡Atención!
+                </h5>
+                <p class="mb-0">
+                    Estás a punto de dar de baja a <strong>@Model.NombreCompleto</strong>.
+                    Esta es una <strong>baja lógica</strong>, por lo que los datos se conservarán pero quedarán inactivos.
+                </p>
+            </div>
+
+            <div class="container-fluid">
+                 Información de la persona 
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-user me-2"></i>Datos de la Persona
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <strong>Nombre:</strong> @Model.NombreCompleto
+                            </div>
+                            <div class="mb-2">
+                                <strong>DNI:</strong> 
+                                <span class="badge bg-light text-dark">@Model.Dni</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Email:</strong> 
+                                @if (!string.IsNullOrEmpty(Model.Email))
+                                {
+                                    <span>@Model.Email</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No especificado</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-user-tag me-2"></i>Roles que NO serán dados de baja
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.EsPropietario || Model.EsInquilino || Model.EsEmpleado)
+                            {
+                                <div class="mb-3">
+                                    @if (Model.EsPropietario)
+                                    {
+                                        <div class="mb-2">
+                                            <span class="badge bg-success me-2">
+                                                <i class="fas fa-home me-1"></i>Propietario
+                                            </span>
+                                            <small class="text-muted">Se NO dará de baja automáticamente</small>
+                                        </div>
+                                    }
+                                    @if (Model.EsInquilino)
+                                    {
+                                        <div class="mb-2">
+                                            <span class="badge bg-info me-2">
+                                                <i class="fas fa-key me-1"></i>Inquilino
+                                            </span>
+                                            <small class="text-muted">Se NO dará de baja automáticamente</small>
+                                        </div>
+                                    }
+                                    @if (Model.EsEmpleado)
+                                    {
+                                        <div class="mb-2">
+                                            <span class="badge bg-warning text-dark me-2">
+                                                <i class="fas fa-user-tie me-1"></i>Empleado
+                                            </span>
+                                            <small class="text-muted">Se NO dará de baja automáticamente</small>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Esta persona no tiene roles activos
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+             Información importante 
+            <div class="card mt-4">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Información Importante
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-success">
+                                <i class="fas fa-check me-1"></i>Lo que SÍ sucederá:
+                            </h6>
+                            <ul class="small">
+                                <li>La persona quedará marcada como inactiva</li>
+                                <li>Los datos se conservan en la base de datos</li>
+                                <li>Se puede reactivar en el futuro si es necesario</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-info">
+                                <i class="fas fa-shield-alt me-1"></i>Lo que NO sucederá:
+                            </h6>
+                            <ul class="small">
+                                <li>No se eliminan los datos permanentemente</li>
+                                <li>Todos sus roles se NO darán de baja automáticamente</li>
+                                <li>No se afectan contratos o pagos históricos</li>
+                                <li>No se pierden registros de auditoría</li>
+                                <li>No se eliminan inmuebles asociados</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+             Botones de confirmación 
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                Esta acción se puede revertir desde el panel de personas "Recuperar Persona"
+                            </small>
+                        </div>
+                        <div>
+                            <a href="@Url.Action("Details", new { id = Model.PersonaId })" class="btn btn-secondary me-3">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                            <form asp-action="Delete" method="post" style="display: inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@Model.PersonaId" />
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash me-2"></i>Confirmar Baja
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

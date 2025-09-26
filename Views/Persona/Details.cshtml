@@ -1,0 +1,169 @@
+@model dynamic
+
+@{
+    ViewData["Title"] = "Detalles de Persona";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+             
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">Detalles de Persona</h2>
+                    <p class="text-muted mb-0">Información completa y roles asignados</p>
+                </div>
+                <div>
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Volver al listado
+                    </a>
+                </div>
+            </div>
+
+             
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            
+            <div class="container-fluid">
+                Información Personal
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-user me-2"></i>Información Personal
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">DNI</label>
+                                        <div class="fw-bold">
+                                            <span class="badge bg-light text-dark fs-6">@Model.Dni</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Nombre Completo</label>
+                                        <div class="fw-bold fs-5">@Model.NombreCompleto</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Teléfono</label>
+                                        <div>
+                                            @if (!string.IsNullOrEmpty(Model.Telefono))
+                                            {
+                                                <i class="fas fa-phone me-2 text-muted"></i>@Model.Telefono
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">No especificado</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Email</label>
+                                        <div>
+                                            @if (!string.IsNullOrEmpty(Model.Email))
+                                            {
+                                                <i class="fas fa-envelope me-2 text-muted"></i>@Model.Email
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">No especificado</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                Roles y Acciones 
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-user-tag me-2"></i>Roles Asignados
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                @if (!string.IsNullOrEmpty(Model.Roles) && Model.Roles != "Sin rol asignado")
+                                {
+                                    @foreach (var rol in Model.Roles.Split(','))
+                                    {
+                                        var rolTrimmed = rol.Trim();
+                                        var badgeClass = rolTrimmed switch
+                                        {
+                                            "Propietario" => "bg-success",
+                                            "Inquilino" => "bg-info",
+                                            "Empleado" => "bg-warning text-dark",
+                                            _ => "bg-secondary"
+                                        };
+                                        <span class="badge @badgeClass me-1 mb-1 fs-6">
+                                            <i class="fas fa-check me-1"></i>@rolTrimmed
+                                        </span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge bg-light text-muted fs-6">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>Sin rol asignado
+                                    </span>
+                                }
+                            </div>
+
+                            <hr>
+
+                            <div class="d-grid gap-2">
+                                <a href="@Url.Action("Edit", new { id = Model.PersonaId })" 
+                                   class="btn btn-primary">
+                                    <i class="fas fa-edit me-2"></i>Modificar Datos
+                                </a>
+                                <a href="@Url.Action("Delete", new { id = Model.PersonaId })" 
+                                   class="btn btn-outline-danger">
+                                    <i class="fas fa-trash me-2"></i>Dar de Baja
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                     Información adicional 
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-info-circle me-2"></i>Información
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <small class="text-muted">
+                                <i class="fas fa-lightbulb me-1"></i>
+                                Los roles se gestionan desde los módulos específicos de Propietarios, Inquilinos y Empleados.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
