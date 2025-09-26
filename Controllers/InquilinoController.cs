@@ -101,6 +101,54 @@ public class InquilinoController : Controller
         }
     }
 
+    /// <summary>
+    /// Muestra los detalles de un inquilino usando PersonaId
+    /// </summary>
+    /// <param name="personaId">ID de la persona</param>
+    /// <returns>Vista con detalles del inquilino</returns>
+    public IActionResult DetailsByPersonaId(int personaId)
+    {
+        try
+        {
+            // Obtener inquilino por PersonaId
+            var (inquilino, estado) = _inquilinoRepo.ObtenerPorIdPersona(personaId);
+            if (inquilino == null)
+            {
+                TempData["Error"] = "Inquilino no encontrado.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Obtener datos completos de la persona
+            var persona = _personaRepo.ObtenerPorId(inquilino.PersonaId);
+            if (persona == null)
+            {
+                TempData["Error"] = "No se encontraron los datos de la persona asociada.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Crear modelo combinado para la vista
+            var modelo = new
+            {
+                InquilinoId = inquilino.InquilinoId,
+                PersonaId = inquilino.PersonaId,
+                Dni = persona.Dni,
+                Apellido = persona.Apellido,
+                Nombre = persona.Nombre,
+                Telefono = persona.Telefono,
+                Email = persona.Email,
+                NombreCompleto = $"{persona.Apellido}, {persona.Nombre}",
+                Estado = estado
+            };
+
+            return View("Details", modelo);
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = $"Error al cargar los detalles del inquilino: {ex.Message}";
+            return RedirectToAction(nameof(Index));
+        }
+    }
+
     #endregion
 
     #region ALTA (Crear nuevo inquilino)

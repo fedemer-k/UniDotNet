@@ -101,6 +101,54 @@ public class PropietarioController : Controller
         }
     }
 
+    /// <summary>
+    /// Muestra los detalles de un propietario usando PersonaId
+    /// </summary>
+    /// <param name="personaId">ID de la persona</param>
+    /// <returns>Vista con detalles del propietario</returns>
+    public IActionResult DetailsByPersonaId(int personaId)
+    {
+        try
+        {
+            // Obtener propietario por PersonaId
+            var (propietario, estado) = _propietarioRepo.ObtenerPorIdPersona(personaId);
+            if (propietario == null)
+            {
+                TempData["Error"] = "Propietario no encontrado.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Obtener datos completos de la persona
+            var persona = _personaRepo.ObtenerPorId(propietario.PersonaId);
+            if (persona == null)
+            {
+                TempData["Error"] = "No se encontraron los datos de la persona asociada.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Crear modelo combinado para la vista
+            var modelo = new
+            {
+                PropietarioId = propietario.PropietarioId,
+                PersonaId = propietario.PersonaId,
+                Dni = persona.Dni,
+                Apellido = persona.Apellido,
+                Nombre = persona.Nombre,
+                Telefono = persona.Telefono,
+                Email = persona.Email,
+                NombreCompleto = $"{persona.Apellido}, {persona.Nombre}",
+                Estado = estado
+            };
+
+            return View("Details", modelo);
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = $"Error al cargar los detalles del propietario: {ex.Message}";
+            return RedirectToAction(nameof(Index));
+        }
+    }
+
     #endregion
 
     #region ALTA (Crear nuevo propietario)

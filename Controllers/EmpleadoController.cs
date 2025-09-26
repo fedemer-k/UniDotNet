@@ -101,6 +101,54 @@ public class EmpleadoController : Controller
         }
     }
 
+    /// <summary>
+    /// Muestra los detalles de un empleado usando PersonaId
+    /// </summary>
+    /// <param name="personaId">ID de la persona</param>
+    /// <returns>Vista con detalles del empleado</returns>
+    public IActionResult DetailsByPersonaId(int personaId)
+    {
+        try
+        {
+            // Obtener empleado por PersonaId
+            var (empleado, estado) = _empleadoRepo.ObtenerPorIdPersona(personaId);
+            if (empleado == null)
+            {
+                TempData["Error"] = "Empleado no encontrado.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Obtener datos completos de la persona
+            var persona = _personaRepo.ObtenerPorId(empleado.PersonaId);
+            if (persona == null)
+            {
+                TempData["Error"] = "No se encontraron los datos de la persona asociada.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Crear modelo combinado para la vista
+            var modelo = new
+            {
+                EmpleadoId = empleado.EmpleadoId,
+                PersonaId = empleado.PersonaId,
+                Dni = persona.Dni,
+                Apellido = persona.Apellido,
+                Nombre = persona.Nombre,
+                Telefono = persona.Telefono,
+                Email = persona.Email,
+                NombreCompleto = $"{persona.Apellido}, {persona.Nombre}",
+                Estado = estado
+            };
+
+            return View("Details", modelo);
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = $"Error al cargar los detalles del empleado: {ex.Message}";
+            return RedirectToAction(nameof(Index));
+        }
+    }
+
     #endregion
 
     #region ALTA (Crear nuevo empleado)

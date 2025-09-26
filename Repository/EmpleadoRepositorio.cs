@@ -145,48 +145,7 @@ public class EmpleadoRepositorio : BaseRepositorio, IEmpleadoRepositorio
     /// <returns>Lista de EmpleadoModel</returns>
     public IList<EmpleadoModel> ObtenerTodos()
     {
-        try
-        {
-            var empleados = new List<EmpleadoModel>();
-            
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                using (MySqlCommand command = new MySqlCommand())
-                {
-                    command.Connection = connection;
-                    command.CommandText = @"
-                        SELECT id_empleado, id_persona 
-                        FROM empleados 
-                        WHERE estado = 1
-                        ORDER BY id_empleado
-                    ";
-                    
-                    connection.Open();
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            empleados.Add(new EmpleadoModel
-                            {
-                                EmpleadoId = reader.GetInt32("id_empleado"),
-                                PersonaId = reader.GetInt32("id_persona")
-                            });
-                        }
-                    }
-                    connection.Close();
-                }
-            }
-            
-            return empleados;
-        }
-        catch (MySqlException ex)
-        {
-            throw new Exception($"Error al obtener todos los empleados: {ex.Message}", ex);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"Error inesperado al obtener todos los empleados: {ex.Message}", ex);
-        }
+        throw new NotImplementedException();
     }
 
     /// <summary> Obtiene un empleado por su ID (Solo tendra personaId) </summary>

@@ -1,6 +1,6 @@
 @model List<UniDotNet.Models.PersonaModel>
 @{
-    ViewData["Title"] = "Gestión de Propietarios";
+    ViewData["Title"] = "Gestión de Inquilinos";
 }
 
 <div class="container-fluid">
@@ -9,10 +9,10 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="card-title mb-0">
-                        <i class="fas fa-home me-2"></i>Gestión de Propietarios
+                        <i class="fas fa-key me-2"></i>Gestión de Inquilinos
                     </h3>
                     <a href="@Url.Action("Create")" class="btn btn-primary">
-                        <i class="fas fa-plus me-1"></i>Nuevo Propietario
+                        <i class="fas fa-plus me-1"></i>Nuevo Inquilino
                     </a>
                 </div>
                 
@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-md-6 text-end">
                             <small class="text-muted">
-                                Mostrando @Model.Count de @ViewBag.TotalRegistros propietarios
+                                Mostrando @Model.Count de @ViewBag.TotalRegistros inquilinos
                             </small>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                         </div>
                     }
 
-                    @* Tabla de propietarios *@
+                    @* Tabla de inquilinos *@
                     @if (Model.Any())
                     {
                         <div class="table-responsive">
@@ -79,28 +79,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var propietario in Model)
+                                    @foreach (var inquilino in Model)
                                     {
                                         <tr>
                                             <td>
-                                                <span class="badge bg-secondary">@propietario.Dni</span>
+                                                <span class="badge bg-secondary">@inquilino.Dni</span>
                                             </td>
                                             <td>
-                                                <strong>@propietario.Apellido, @propietario.Nombre</strong>
+                                                <strong>@inquilino.Apellido, @inquilino.Nombre</strong>
                                             </td>
                                             <td>
-                                                <i class="fas fa-phone me-1 text-muted"></i>@propietario.Telefono
+                                                <i class="fas fa-phone me-1 text-muted"></i>@inquilino.Telefono
                                             </td>
                                             <td>
-                                                <i class="fas fa-envelope me-1 text-muted"></i>@propietario.Email
+                                                <i class="fas fa-envelope me-1 text-muted"></i>@inquilino.Email
                                             </td>
                                             <td class="text-center">
-                                                <a href="@Url.Action("DetailsByPersonaId", new { personaId = propietario.PersonaId })" 
+                                                <a href="@Url.Action("DetailsByPersonaId", new { personaId = inquilino.PersonaId })" 
                                                    class="btn btn-info btn-sm me-1" title="Ver detalles">
                                                     <i class="fas fa-eye me-1"></i>Ver
                                                 </a>
                                                 <button type="button" class="btn btn-danger btn-sm" 
-                                                        onclick="eliminarPropietario(@propietario.PersonaId)" title="Dar de baja">
+                                                        onclick="eliminarInquilino(@inquilino.PersonaId)" title="Dar de baja">
                                                     <i class="fas fa-trash me-1"></i>Baja
                                                 </button>
                                             </td>
@@ -110,10 +110,10 @@
                             </table>
                         </div>
 
-                        @* Simplified pagination using only links, no JavaScript *@
+                        @* Paginación simplificada *@
                         @if (ViewBag.TotalPaginas > 1)
                         {
-                            <nav aria-label="Paginación de propietarios" class="mt-4">
+                            <nav aria-label="Paginación de inquilinos" class="mt-4">
                                 <ul class="pagination justify-content-center">
                                     @* Botón Anterior *@
                                     @if (ViewBag.HasPrevious)
@@ -179,18 +179,18 @@
                     else
                     {
                         <div class="text-center py-5">
-                            <i class="fas fa-home fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No se encontraron propietarios</h5>
+                            <i class="fas fa-key fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No se encontraron inquilinos</h5>
                             @if (!string.IsNullOrEmpty(ViewBag.Search))
                             {
                                 <p class="text-muted">No hay resultados para la búsqueda: "<strong>@ViewBag.Search</strong>"</p>
-                                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">Ver todos los propietarios</a>
+                                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">Ver todos los inquilinos</a>
                             }
                             else
                             {
-                                <p class="text-muted">Comience agregando un nuevo propietario</p>
+                                <p class="text-muted">Comience agregando un nuevo inquilino</p>
                                 <a href="@Url.Action("Create")" class="btn btn-primary">
-                                    <i class="fas fa-plus me-1"></i>Crear Propietario
+                                    <i class="fas fa-plus me-1"></i>Crear Inquilino
                                 </a>
                             }
                         </div>
@@ -203,8 +203,8 @@
 
 @section Scripts {
 <script>
-function eliminarPropietario(personaId) {
-    if (confirm('¿Está seguro de que desea dar de baja este propietario?')) {
+function eliminarInquilino(personaId) {
+    if (confirm('¿Está seguro de que desea dar de baja este inquilino?')) {
         fetch('@Url.Action("DeleteByPersonaId")', {
             method: 'POST',
             headers: {

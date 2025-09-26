@@ -145,48 +145,7 @@ public class InquilinoRepositorio : BaseRepositorio, IInquilinoRepositorio
     /// <returns>Lista de InquilinoModel</returns>
     public IList<InquilinoModel> ObtenerTodos()
     {
-        try
-        {
-            var inquilinos = new List<InquilinoModel>();
-            
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                using (MySqlCommand command = new MySqlCommand())
-                {
-                    command.Connection = connection;
-                    command.CommandText = @"
-                        SELECT id_inquilino, id_persona 
-                        FROM inquilinos 
-                        WHERE estado = 1
-                        ORDER BY id_inquilino
-                    ";
-                    
-                    connection.Open();
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            inquilinos.Add(new InquilinoModel
-                            {
-                                InquilinoId = reader.GetInt32("id_inquilino"),
-                                PersonaId = reader.GetInt32("id_persona")
-                            });
-                        }
-                    }
-                    connection.Close();
-                }
-            }
-            
-            return inquilinos;
-        }
-        catch (MySqlException ex)
-        {
-            throw new Exception($"Error al obtener todos los inquilinos: {ex.Message}", ex);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"Error inesperado al obtener todos los inquilinos: {ex.Message}", ex);
-        }
+        throw new NotImplementedException();
     }
 
     /// <summary> Obtiene un inquilino por su ID (Solo tendra personaId) </summary>
